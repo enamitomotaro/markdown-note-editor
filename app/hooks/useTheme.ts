@@ -1,31 +1,26 @@
-import { useState, useEffect } from 'react';
-
-export type Theme = 'light' | 'dark';
+import { useEffect } from 'react';
 
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>('light');
-
   useEffect(() => {
-    // 初期テーマの設定
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    // システム設定に基づいてダークモードを適用
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     
-    setTheme(initialTheme);
-    document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+    const applyTheme = (e: MediaQueryListEvent | MediaQueryList) => {
+      if (e.matches) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
+
+    // 初期設定
+    applyTheme(mediaQuery);
+
+    // システム設定変更時のリスナー
+    mediaQuery.addEventListener('change', applyTheme);
+
+    return () => {
+      mediaQuery.removeEventListener('change', applyTheme);
+    };
   }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    // classList.toggle の第二引数は不安定なので、明示的に add/remove を使用
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
-
-  return { theme, toggleTheme };
 }

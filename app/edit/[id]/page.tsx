@@ -8,13 +8,12 @@ import toast from 'react-hot-toast';
 import { 
   ArrowLeft, Trash2, Eye, EyeOff, 
   Bold, Italic, Link2, ListOrdered, ListIcon,
-  Code, Quote, Hash, Moon, Sun
+  Code, Quote, Hash
 } from 'lucide-react';
 import { Note } from '@/app/types/note';
 import { getNoteById, saveNote, deleteNote, extractTitle } from '@/app/utils/storage';
 import { useDebounce } from '@/app/hooks/useDebounce';
 import { useKeyboardShortcuts } from '@/app/hooks/useKeyboardShortcuts';
-import { useThemeContext } from '@/app/providers/ThemeProvider';
 import { MarkdownPreview } from '@/app/components/MarkdownPreview';
 
 interface EditorPageProps {
@@ -30,7 +29,6 @@ export default function EditorPage({ params }: EditorPageProps) {
   const [showPreview, setShowPreview] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { theme, toggleTheme } = useThemeContext();
   
   // パフォーマンス最適化のためプレビューの更新を遅延
   const deferredBody = useDeferredValue(body);
@@ -146,18 +144,6 @@ export default function EditorPage({ params }: EditorPageProps) {
             </div>
 
             <div className="flex items-center space-x-2">
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                aria-label="テーマ切替"
-              >
-                {theme === 'light' ? (
-                  <Moon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                ) : (
-                  <Sun className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                )}
-              </button>
-              
               <button
                 onClick={() => setShowPreview(!showPreview)}
                 className="flex items-center space-x-2 px-3 py-2 rounded-lg

@@ -2,15 +2,13 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { Search, Plus, Moon, Sun, FileText, Calendar, Hash } from 'lucide-react';
+import { Search, Plus, FileText, Calendar, Hash } from 'lucide-react';
 import { Note } from '@/app/types/note';
 import { getNotes } from '@/app/utils/storage';
-import { useThemeContext } from '@/app/providers/ThemeProvider';
 
 export default function Home() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const { theme, toggleTheme } = useThemeContext();
 
   useEffect(() => {
     // クライアントサイドでのみ実行
@@ -72,27 +70,13 @@ export default function Home() {
               </h1>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                aria-label="Toggle theme"
-              >
-                {theme === 'light' ? (
-                  <Moon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                ) : (
-                  <Sun className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                )}
-              </button>
-              
-              <Link
-                href="/edit/new"
-                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 shadow-lg"
-              >
-                <Plus className="w-5 h-5" />
-                <span className="hidden sm:inline">新規ノート</span>
-              </Link>
-            </div>
+            <Link
+              href="/edit/new"
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 shadow-lg"
+            >
+              <Plus className="w-5 h-5" />
+              <span className="hidden sm:inline">新規ノート</span>
+            </Link>
           </div>
         </div>
       </header>
