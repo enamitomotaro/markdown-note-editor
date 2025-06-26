@@ -3,7 +3,6 @@
 import { useState, useEffect, use, useDeferredValue, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import ReactMarkdown from 'react-markdown';
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
 import { 
@@ -16,6 +15,7 @@ import { getNoteById, saveNote, deleteNote, extractTitle } from '@/app/utils/sto
 import { useDebounce } from '@/app/hooks/useDebounce';
 import { useKeyboardShortcuts } from '@/app/hooks/useKeyboardShortcuts';
 import { useThemeContext } from '@/app/providers/ThemeProvider';
+import { MarkdownPreview } from '@/app/components/MarkdownPreview';
 
 interface EditorPageProps {
   params: Promise<{ id: string }>;
@@ -269,15 +269,7 @@ export default function EditorPage({ params }: EditorPageProps) {
         {showPreview && (
           <div className="w-1/2 p-4 overflow-auto animate-slide-in-right">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 min-h-full">
-              <div className="prose prose-lg dark:prose-invert max-w-none
-                           prose-headings:text-gray-900 dark:prose-headings:text-white
-                           prose-p:text-gray-700 dark:prose-p:text-gray-300
-                           prose-a:text-blue-600 dark:prose-a:text-blue-400
-                           prose-code:text-pink-600 dark:prose-code:text-pink-400
-                           prose-pre:bg-gray-100 dark:prose-pre:bg-gray-900
-                           prose-blockquote:border-gray-300 dark:prose-blockquote:border-gray-600">
-                <ReactMarkdown>{deferredBody}</ReactMarkdown>
-              </div>
+              <MarkdownPreview content={deferredBody} />
             </div>
           </div>
         )}
