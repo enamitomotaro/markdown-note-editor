@@ -3,7 +3,6 @@
 import { useState, useEffect, use, useDeferredValue, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
 import { 
   ArrowLeft, Trash2, Eye, EyeOff, 
@@ -70,7 +69,7 @@ export default function EditorPage({ params }: EditorPageProps) {
   useEffect(() => {
     // 初期ロード
     if (id === 'new') {
-      const newId = uuidv4();
+      const newId = crypto.randomUUID();
       setNoteId(newId);
       setBody('# 新しいノート\n\nここから書き始めてください...');
       setIsLoading(false);

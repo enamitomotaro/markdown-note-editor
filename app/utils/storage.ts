@@ -2,17 +2,39 @@ import { Note } from '@/app/types/note';
 
 const STORAGE_KEY = 'markdown-notes';
 
+// メモリ内キャッシュ
+let notesCache: Note[] | null = null;
+let cacheTimestamp = 0;
+const CACHE_DURATION = 5000; // 5秒間キャッシュ
+
 export const getNotes = (): Note[] => {
   if (typeof window === 'undefined') return [];
   
+  // キャッシュが有効な場合はキャッシュから返す
+  const now = Date.now();
+  if (notesCache && (now - cacheTimestamp) < CACHE_DURATION) {
+    return notesCache;
+  }
+  
   const stored = localStorage.getItem(STORAGE_KEY);
-  return stored ? JSON.parse(stored) : [];
+  notesCache = stored ? JSON.parse(stored) : [];
+  cacheTimestamp = now;
+  return notesCache as Note[];
 };
 
 export const saveNotes = (notes: Note[]): void => {
   if (typeof window === 'undefined') return;
   
   localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+  // キャッシュを更新
+  notesCache = notes;
+  cacheTimestamp = Date.now();
+};
+
+// キャッシュをクリアする関数
+export const clearNotesCache = (): void => {
+  notesCache = null;
+  cacheTimestamp = 0;
 };
 
 export const getNoteById = (id: string): Note | null => {
